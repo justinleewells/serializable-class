@@ -31,6 +31,7 @@ let deserializedObject = new SerializableObject().deserialize(data) // Serializa
 Extending the `SerializableObject` class is easy. Just be sure to register the extended class after it has been defined.
 ```javascript
 class Subclass extends SerializableObject {}
+SerializableObject.register(Subclass)
 let object = new SerializableObject()
 object.subclass = new Subclass()
 let data = object.serialize() // {_class: 'SerializableObject', subclass: { _class: 'Subclass' } }
@@ -39,6 +40,7 @@ let deserializedObject = new SerializableObject().deserialize(data) // Serializa
 It is not necessary to call `deserialize` on the type of object that you want to be returned. The type of object returned will always match the `_class` of the serialized object that is provided.
 ```javascript
 class Subclass extends SerializableObject {}
+SerializableObject.register(Subclass)
 let object = new Subclass()
 object.value = 10
 let data = object.serialize() // { _class: 'Subclass', value: 10 }
