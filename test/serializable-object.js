@@ -58,6 +58,13 @@ describe('SerializableObject', () => {
       expect(serialized.number).to.equal(0)
       done()
     })
+    it('does not serialize functions', (done) => {
+      let object = new SerializableObject()
+      object.foo = function () {}
+      let serialized = object.serialize()
+      expect(serialized.foo).to.equal(undefined)
+      done()
+    })
   })
   describe('#deserialize', () => {
     it('deserializes numbers', (done) => {
