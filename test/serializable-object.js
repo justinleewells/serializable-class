@@ -3,6 +3,12 @@ const expect = require('chai').expect
 
 class RegisteredSubclass extends SerializableObject {}
 SerializableObject.register(RegisteredSubclass)
+class DeserializeHookSubclass extends SerializableObject {
+  _deserialize (object) {
+    this.value = 10
+  }
+}
+SerializableObject.register(DeserializeHookSubclass)
 class UnregisteredSubclass extends SerializableObject {}
 
 describe('SerializableObject', () => {
@@ -143,6 +149,14 @@ describe('SerializableObject', () => {
         }
       }
       expect(function () { new SerializableObject().deserialize(serialized) }).to.throw('UnregisteredClass has not been registered as a SerializableObject')
+      done()
+    })
+    it('calls _deserialize after deserialization if it is defined', (done) => {
+      let serialized = {
+        _class: 'DeserializeHookSubclass'
+      }
+      let object = new SerializableObject().deserialize(serialized)
+      expect(object.value).to.equal(10)
       done()
     })
   })
