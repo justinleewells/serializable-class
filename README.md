@@ -46,3 +46,6 @@ object.value = 10
 let data = object.serialize() // { _class: 'Subclass', value: 10 }
 let deserializedObject = new SerializableObject().deserialize(data) // Subclass { value: 10}
 ```
+
+### Hooks
+There are four hooks available — `_preSerialize`, `_postSerialize`, `_preDeserialize`, `_postDeserialize` — which are called at the respective steps in an object's serialization and deserialization.
