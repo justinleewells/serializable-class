@@ -3,12 +3,30 @@ const expect = require('chai').expect
 
 class RegisteredSubclass extends SerializableObject {}
 SerializableObject.register(RegisteredSubclass)
-class DeserializeHookSubclass extends SerializableObject {
-  _deserialize (object) {
+class PreSerializeSubclass extends SerializableObject {
+  _preSerialize (object) {
     this.value = 10
   }
 }
-SerializableObject.register(DeserializeHookSubclass)
+SerializableObject.register(PreSerializeSubclass)
+class PostSerializeSubclass extends SerializableObject {
+  _postSerialize (object) {
+    this.value = 10
+  }
+}
+SerializableObject.register(PostSerializeSubclass)
+class PreDeserializeSubclass extends SerializableObject {
+  _preDeserialize (object) {
+    this.value = 10
+  }
+}
+SerializableObject.register(PreDeserializeSubclass)
+class PostDeserializeSubclass extends SerializableObject {
+  _postDeserialize (object) {
+    this.value = 10
+  }
+}
+SerializableObject.register(PostDeserializeSubclass)
 class UnregisteredSubclass extends SerializableObject {}
 
 describe('SerializableObject', () => {
@@ -69,6 +87,20 @@ describe('SerializableObject', () => {
       object.foo = function () {}
       let serialized = object.serialize()
       expect(serialized.foo).to.equal(undefined)
+      done()
+    })
+    it('calls _preSerialize before serialization if it is defined', (done) => {
+      let object = new PreSerializeSubclass()
+      let serialized = object.serialize()
+      expect(object.value).to.equal(10)
+      expect(serialized.value).to.equal(10)
+      done()
+    })
+    it('calls _postSerialize after serialization if it is defined', (done) => {
+      let object = new PostSerializeSubclass()
+      let serialized = object.serialize()
+      expect(object.value).to.equal(10)
+      expect(serialized.value).to.equal(undefined)
       done()
     })
   })
@@ -151,9 +183,17 @@ describe('SerializableObject', () => {
       expect(function () { new SerializableObject().deserialize(serialized) }).to.throw('UnregisteredClass has not been registered as a SerializableObject')
       done()
     })
-    it('calls _deserialize after deserialization if it is defined', (done) => {
+    it('calls _preDeserialize before deserialization if it is defined', (done) => {
       let serialized = {
-        _class: 'DeserializeHookSubclass'
+        _class: 'PreDeserializeSubclass'
+      }
+      let object = new SerializableObject().deserialize(serialized)
+      expect(object.value).to.equal(10)
+      done()
+    })
+    it('calls _postDeserialize after deserialization if it is defined', (done) => {
+      let serialized = {
+        _class: 'PostDeserializeSubclass'
       }
       let object = new SerializableObject().deserialize(serialized)
       expect(object.value).to.equal(10)
