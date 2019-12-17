@@ -24,7 +24,7 @@ object.serialize() // { _class: 'SerializableClass', value: 10 }
 let object = new SerializableClass()
 object.value = 10
 let data = object.serialize()
-let deserializedObject = new SerializableClass().deserialize(data) // SerializableClass { value: 10 }
+let deserializedObject = SerializableClass.deserialize(data) // SerializableClass { value: 10 }
 ```
 
 ### Extending Classes
@@ -35,16 +35,16 @@ SerializableClass.register(Subclass)
 let object = new SerializableClass()
 object.subclass = new Subclass()
 let data = object.serialize() // {_class: 'SerializableClass', subclass: { _class: 'Subclass' } }
-let deserializedObject = new SerializableClass().deserialize(data) // SerializableClass { subclass: Subclass {} }
+let deserializedObject = SerializableClass.deserialize(data) // SerializableClass { subclass: Subclass {} }
 ```
-It is not necessary to call `deserialize` on the type of object that you want to be returned. The type of object returned will always match the `_class` of the serialized class that is provided.
+It is not necessary to call `deserialize` on the extended class that you want to be returned. The class returned will always match the `_class` of the serialized object that is provided.
 ```javascript
 class Subclass extends SerializableClass {}
 SerializableClass.register(Subclass)
 let object = new Subclass()
 object.value = 10
 let data = object.serialize() // { _class: 'Subclass', value: 10 }
-let deserializedObject = new SerializableClass().deserialize(data) // Subclass { value: 10}
+let deserializedObject = SerializableClass.deserialize(data) // Subclass { value: 10}
 ```
 
 ### Hooks
