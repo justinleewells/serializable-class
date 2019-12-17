@@ -1,4 +1,4 @@
-const SerializableClass = require('../lib/serializable-class')
+const SerializableClass = require('../index')
 const expect = require('chai').expect
 
 class RegisteredSubclass extends SerializableClass {}
