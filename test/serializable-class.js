@@ -1,56 +1,56 @@
-const SerializableObject = require('../lib/serializable-object')
+const SerializableClass = require('../lib/serializable-class')
 const expect = require('chai').expect
 
-class RegisteredSubclass extends SerializableObject {}
-SerializableObject.register(RegisteredSubclass)
-class PreSerializeSubclass extends SerializableObject {
+class RegisteredSubclass extends SerializableClass {}
+SerializableClass.register(RegisteredSubclass)
+class PreSerializeSubclass extends SerializableClass {
   _preSerialize (object) {
     this.value = 10
   }
 }
-SerializableObject.register(PreSerializeSubclass)
-class PostSerializeSubclass extends SerializableObject {
+SerializableClass.register(PreSerializeSubclass)
+class PostSerializeSubclass extends SerializableClass {
   _postSerialize (object) {
     this.value = 10
   }
 }
-SerializableObject.register(PostSerializeSubclass)
-class PreDeserializeSubclass extends SerializableObject {
+SerializableClass.register(PostSerializeSubclass)
+class PreDeserializeSubclass extends SerializableClass {
   _preDeserialize (object) {
     this.value = 10
   }
 }
-SerializableObject.register(PreDeserializeSubclass)
-class PostDeserializeSubclass extends SerializableObject {
+SerializableClass.register(PreDeserializeSubclass)
+class PostDeserializeSubclass extends SerializableClass {
   _postDeserialize (object) {
     this.value = 10
   }
 }
-SerializableObject.register(PostDeserializeSubclass)
-class UnregisteredSubclass extends SerializableObject {}
+SerializableClass.register(PostDeserializeSubclass)
+class UnregisteredSubclass extends SerializableClass {}
 
-describe('SerializableObject', () => {
+describe('SerializableClass', () => {
   describe('#constructor', () => {
     it('throws an error if the subclass has not been registered', (done) => {
-      expect(function () { new UnregisteredSubclass() }).to.throw('UnregisteredSubclass has not been registered as a SerializableObject')
+      expect(function () { new UnregisteredSubclass() }).to.throw('UnregisteredSubclass has not been registered as a SerializableClass')
       done()
     })
   })
   describe('#serialize', () => {
     it('serializes numbers', (done) => {
-      let object = new SerializableObject()
+      let object = new SerializableClass()
       object.number = 0
       expect(object.serialize().number).to.equal(0)
       done()
     })
     it('serializes strings', (done) => {
-      let object = new SerializableObject()
+      let object = new SerializableClass()
       object.string = 'string'
       expect(object.serialize().string).to.equal('string')
       done()
     })
     it('serializes objects', (done) => {
-      let object = new SerializableObject()
+      let object = new SerializableClass()
       object.object = {number: 0}
       let serialized = object.serialize()
       expect(serialized.object).to.be.instanceof(Object)
@@ -58,23 +58,23 @@ describe('SerializableObject', () => {
       done()
     })
     it('serializes arrays', (done) => {
-      let object = new SerializableObject()
+      let object = new SerializableClass()
       object.array = [0]
       let serialized = object.serialize()
       expect(serialized.array).to.be.instanceof(Array)
       expect(serialized.array[0]).to.equal(0)
       done()
     })
-    it('serializes instances of SerializableObject', (done) => {
-      let object = new SerializableObject()
-      object.serializableObject = new SerializableObject()
+    it('serializes instances of SerializableClass', (done) => {
+      let object = new SerializableClass()
+      object.serializableObject = new SerializableClass()
       object.serializableObject.number = 0
       let serialized = object.serialize()
-      expect(serialized.serializableObject._class).to.equal('SerializableObject')
+      expect(serialized.serializableObject._class).to.equal('SerializableClass')
       expect(serialized.serializableObject.number).to.equal(0)
       done()
     })
-    it('serializes instances of subclasses of SerializableObject', (done) => {
+    it('serializes instances of subclasses of SerializableClass', (done) => {
       let subclass = new RegisteredSubclass()
       subclass.number = 0
       let serialized = subclass.serialize()
@@ -83,7 +83,7 @@ describe('SerializableObject', () => {
       done()
     })
     it('does not serialize functions', (done) => {
-      let object = new SerializableObject()
+      let object = new SerializableClass()
       object.foo = function () {}
       let serialized = object.serialize()
       expect(serialized.foo).to.equal(undefined)
@@ -106,50 +106,50 @@ describe('SerializableObject', () => {
   })
   describe('#deserialize', () => {
     it('deserializes numbers', (done) => {
-      let object = new SerializableObject()
+      let object = new SerializableClass()
       object.number = 0
       let serialized = object.serialize()
-      let deserialized = new SerializableObject().deserialize(serialized)
+      let deserialized = new SerializableClass().deserialize(serialized)
       expect(deserialized.number).to.equal(0)
       done()
     })
     it('deserializes strings', (done) => {
-      let object = new SerializableObject()
+      let object = new SerializableClass()
       object.string = 'string'
       let serialized = object.serialize()
-      let deserialized = new SerializableObject().deserialize(serialized)
+      let deserialized = new SerializableClass().deserialize(serialized)
       expect(deserialized.string).to.equal('string')
       done()
     })
     it('deserializes objects', (done) => {
-      let object = new SerializableObject()
+      let object = new SerializableClass()
       object.object = {number: 0}
       let serialized = object.serialize()
-      let deserialized = new SerializableObject().deserialize(serialized)
+      let deserialized = new SerializableClass().deserialize(serialized)
       expect(deserialized.object).to.be.instanceof(Object)
       expect(deserialized.object.number).to.equal(0)
       done()
     })
     it('deserializes arrays', (done) => {
-      let object = new SerializableObject()
+      let object = new SerializableClass()
       object.array = [0]
       let serialized = object.serialize()
-      let deserialized = new SerializableObject().deserialize(serialized)
+      let deserialized = new SerializableClass().deserialize(serialized)
       expect(deserialized.array).to.be.instanceof(Array)
       expect(deserialized.array[0]).to.equal(0)
       done()
     })
-    it('deserializes instances of SerializableObject', (done) => {
-      let object = new SerializableObject()
-      object.serializableObject = new SerializableObject()
+    it('deserializes instances of SerializableClass', (done) => {
+      let object = new SerializableClass()
+      object.serializableObject = new SerializableClass()
       object.serializableObject.number = 0
       let serialized = object.serialize()
-      let deserialized = new SerializableObject().deserialize(serialized)
-      expect(deserialized.serializableObject).to.be.instanceof(SerializableObject)
+      let deserialized = new SerializableClass().deserialize(serialized)
+      expect(deserialized.serializableObject).to.be.instanceof(SerializableClass)
       expect(deserialized.serializableObject.number).to.equal(0)
       done()
     })
-    it('deserializes instances of subclasses of SerializableObject', (done) => {
+    it('deserializes instances of subclasses of SerializableClass', (done) => {
       let subclass = new RegisteredSubclass()
       subclass.number = 0
       let serialized = subclass.serialize()
@@ -162,7 +162,7 @@ describe('SerializableObject', () => {
       let serialized = {
         _class: 'RegisteredSubclass'
       }
-      let object = new SerializableObject().deserialize(serialized)
+      let object = new SerializableClass().deserialize(serialized)
       expect(object).to.be.instanceof(RegisteredSubclass)
       done()
     })
@@ -170,24 +170,24 @@ describe('SerializableObject', () => {
       let serialized = {
         _class: 'UnregisteredClass'
       }
-      expect(function () { new SerializableObject().deserialize(serialized) }).to.throw('UnregisteredClass has not been registered as a SerializableObject')
+      expect(function () { new SerializableClass().deserialize(serialized) }).to.throw('UnregisteredClass has not been registered as a SerializableClass')
       done()
     })
     it('throws an error if an unregistered _class is present in a property', (done) => {
       let serialized = {
-        _class: 'SerializableObject',
+        _class: 'SerializableClass',
         unregisteredClass: {
           _class: 'UnregisteredClass'
         }
       }
-      expect(function () { new SerializableObject().deserialize(serialized) }).to.throw('UnregisteredClass has not been registered as a SerializableObject')
+      expect(function () { new SerializableClass().deserialize(serialized) }).to.throw('UnregisteredClass has not been registered as a SerializableClass')
       done()
     })
     it('calls _preDeserialize before deserialization if it is defined', (done) => {
       let serialized = {
         _class: 'PreDeserializeSubclass'
       }
-      let object = new SerializableObject().deserialize(serialized)
+      let object = new SerializableClass().deserialize(serialized)
       expect(object.value).to.equal(10)
       done()
     })
@@ -195,7 +195,7 @@ describe('SerializableObject', () => {
       let serialized = {
         _class: 'PostDeserializeSubclass'
       }
-      let object = new SerializableObject().deserialize(serialized)
+      let object = new SerializableClass().deserialize(serialized)
       expect(object.value).to.equal(10)
       done()
     })
