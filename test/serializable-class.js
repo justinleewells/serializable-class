@@ -11,7 +11,7 @@ class PreSerializeSubclass extends SerializableClass {
 SerializableClass.register(PreSerializeSubclass)
 class PostSerializeSubclass extends SerializableClass {
   _postSerialize (object) {
-    this.value = 10
+    object.value = 10
   }
 }
 SerializableClass.register(PostSerializeSubclass)
@@ -99,8 +99,8 @@ describe('SerializableClass', () => {
     it('calls _postSerialize after serialization if it is defined', (done) => {
       let object = new PostSerializeSubclass()
       let serialized = object.serialize()
-      expect(object.value).to.equal(10)
-      expect(serialized.value).to.equal(undefined)
+      expect(object.value).to.equal(undefined)
+      expect(serialized.value).to.equal(10)
       done()
     })
   })
