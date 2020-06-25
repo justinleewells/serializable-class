@@ -1,6 +1,6 @@
 {
   "name": "serializable-object",
-  "version": "1.0.1",
+  "version": "1.2.0",
   "description": "A lightweight library for serializing and deserializing objects",
   "main": "index.js",
   "directories": {
