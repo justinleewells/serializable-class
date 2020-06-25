@@ -1,1 +1,1 @@
-module.exports = require('./lib/serializable-class')
+module.exports = require('./lib/serializable-object')

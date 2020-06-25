@@ -1,7 +1,7 @@
 {
-  "name": "serializable-class",
+  "name": "serializable-object",
   "version": "1.0.1",
-  "description": "A lightweight library for serializing and deserializing classes",
+  "description": "A lightweight library for serializing and deserializing objects",
   "main": "index.js",
   "directories": {
     "lib": "lib",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/justinleewells/serializable-class.git"
+    "url": "https://github.com/justinleewells/serializable-object.git"
   },
   "keywords": [
     "serialize",
@@ -23,11 +23,11 @@
   "author": "justinleewells <justinleewells@icloud.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/justinleewells/serializable-class/issues"
+    "url": "https://github.com/justinleewells/serializable-object/issues"
   },
-  "homepage": "https://github.com/justinleewells/serializable-class#readme",
+  "homepage": "https://github.com/justinleewells/serializable-object#readme",
   "devDependencies": {
     "chai": "^4.2.0",
-    "mocha": "^6.2.2"
+    "mocha": "^8.0.1"
   }
 }
